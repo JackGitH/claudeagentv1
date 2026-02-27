@@ -18,6 +18,7 @@ build/
 node_modules/
 npm-debug.log*
 .pnpm-debug.log*
+frontend/dist/
 
 # IDE
 .idea/
