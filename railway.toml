@@ -14,4 +14,4 @@ name = "message-subscription"
 
 [[services.volumes]]
 name = "data"
-mountPath = "/app/data"
+mountPath = "/data"

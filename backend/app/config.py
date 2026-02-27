@@ -13,11 +13,13 @@ class Settings(BaseSettings):
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = False
 
-    # Database - SQLite file database
-    DATABASE_URL: str = "sqlite+aiosqlite:///./data/message_subscription.db"
+    # Data directory for SQLite (use /data for Railway volume, ./data for local)
+    DATA_DIR: str = os.getenv("DATA_DIR", "/data")
 
-    # Data directory for SQLite
-    DATA_DIR: str = "./data"
+    # Database - SQLite file database (auto-generated from DATA_DIR)
+    @property
+    def DATABASE_URL(self) -> str:
+        return f"sqlite+aiosqlite:///{self.DATA_DIR}/message_subscription.db"
 
     # Security
     SECRET_KEY: str = "your-secret-key-change-in-production"
