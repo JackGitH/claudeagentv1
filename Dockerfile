@@ -36,11 +36,7 @@ COPY backend/ ./
 COPY --from=frontend-build /frontend/dist /app/static
 
 # Create data directory for SQLite (Railway volume mount point)
-RUN mkdir -p /data
-
-# Create non-root user and grant permissions
-RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app /data
-USER appuser
+RUN mkdir -p /data && chmod 777 /data
 
 # Expose port
 EXPOSE 8000
