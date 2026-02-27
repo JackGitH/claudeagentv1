@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sess
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import MetaData
 from app.config import settings
+import os
 
 # Naming convention for constraints
 convention = {
@@ -21,11 +22,18 @@ class Base(DeclarativeBase):
     metadata = metadata
 
 
-# Create async engine
+# Ensure data directory exists for SQLite
+db_path = settings.DATABASE_URL.replace("sqlite+aiosqlite:///", "")
+db_dir = os.path.dirname(db_path)
+if db_dir:
+    os.makedirs(db_dir, exist_ok=True)
+
+# Create async engine for SQLite
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=settings.DEBUG,
     future=True,
+    connect_args={"check_same_thread": False}  # SQLite specific
 )
 
 # Create async session factory

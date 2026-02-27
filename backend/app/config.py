@@ -2,6 +2,7 @@
 from pydantic_settings import BaseSettings
 from typing import Optional
 from functools import lru_cache
+import os
 
 
 class Settings(BaseSettings):
@@ -12,11 +13,11 @@ class Settings(BaseSettings):
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = False
 
-    # Database
-    DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/message_subscription"
+    # Database - SQLite file database
+    DATABASE_URL: str = "sqlite+aiosqlite:///./data/message_subscription.db"
 
-    # Redis
-    REDIS_URL: str = "redis://localhost:6379/0"
+    # Data directory for SQLite
+    DATA_DIR: str = "./data"
 
     # Security
     SECRET_KEY: str = "your-secret-key-change-in-production"
@@ -43,13 +44,14 @@ class Settings(BaseSettings):
     # OpenAI
     OPENAI_API_KEY: Optional[str] = None
 
-    # Celery
-    CELERY_BROKER_URL: str = "redis://localhost:6379/1"
-    CELERY_RESULT_BACKEND: str = "redis://localhost:6379/2"
-
     class Config:
         env_file = ".env"
         case_sensitive = True
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Ensure data directory exists
+        os.makedirs(self.DATA_DIR, exist_ok=True)
 
 
 @lru_cache()

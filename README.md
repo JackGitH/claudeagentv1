@@ -1,4 +1,5 @@
-ral# Message Subscription System
+
+# Message Subscription System
 
 A multi-functional message subscription system that supports collecting messages from multiple sources, AI-powered analysis, and publishing to target platforms with various notification channels.
 
@@ -13,16 +14,15 @@ A multi-functional message subscription system that supports collecting messages
 ## Tech Stack
 
 - **Backend**: Python 3.11 + FastAPI
-- **Database**: PostgreSQL + Redis
-- **Background Tasks**: Celery + Redis
+- **Database**: SQLite (file-based, no external DB needed)
 - **Frontend**: Vue 3 + Element Plus
-- **Deployment**: Docker + Docker Compose
+- **Deployment**: Docker + Docker Compose / Railway
 
 ## Quick Start
 
 ### Prerequisites
 
-- Docker and Docker Compose
+- Docker and Docker Compose (for containerized deployment)
 - Python 3.11+ (for local development)
 - Node.js 20+ (for frontend development)
 
@@ -87,9 +87,6 @@ source venv/bin/activate  # or `venv\Scripts\activate` on Windows
 # Install dependencies
 pip install -r requirements.txt
 
-# Run database migrations
-alembic upgrade head
-
 # Start development server
 uvicorn app.main:app --reload
 ```
@@ -104,18 +101,6 @@ npm install
 
 # Start development server
 npm run dev
-```
-
-#### Celery Worker
-
-```bash
-cd backend
-
-# Start worker
-celery -A app.tasks worker --loglevel=info
-
-# Start beat scheduler (in another terminal)
-celery -A app.tasks beat --loglevel=info
 ```
 
 ## API Endpoints
@@ -153,9 +138,10 @@ celery -A app.tasks beat --loglevel=info
 
 1. Push code to GitHub
 2. Connect Railway to your GitHub repo
-3. Add PostgreSQL and Redis services
-4. Configure environment variables
-5. Deploy!
+3. Configure environment variables (SECRET_KEY is required)
+4. Deploy!
+
+No external database needed - SQLite file database is used for simplicity.
 
 See [Railway documentation](https://docs.railway.app/) for more details.
 
@@ -173,9 +159,9 @@ message-subscription-system/
 │   │   │   ├── notifier/   # Notifications
 │   │   │   ├── publisher/  # Publishing
 │   │   │   └── ai/         # AI analysis
-│   │   ├── tasks/        # Celery tasks
+│   │   ├── tasks/        # Background tasks
 │   │   └── utils/        # Utilities
-│   ├── alembic/          # Database migrations
+│   ├── data/             # SQLite database files
 │   └── requirements.txt
 ├── frontend/
 │   ├── src/
