@@ -35,11 +35,11 @@ COPY backend/ ./
 # Copy frontend build to static directory
 COPY --from=frontend-build /frontend/dist /app/static
 
-# Create data directory for SQLite
-RUN mkdir -p /app/data
+# Create data directory for SQLite (Railway volume mount point)
+RUN mkdir -p /data
 
-# Create non-root user
-RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
+# Create non-root user and grant permissions
+RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app /data
 USER appuser
 
 # Expose port
